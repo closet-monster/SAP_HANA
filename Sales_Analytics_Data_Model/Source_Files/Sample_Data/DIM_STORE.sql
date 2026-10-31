@@ -1,0 +1,12 @@
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S01', 'Glow & Care Warsaw', 'Warsaw', 'PL', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S02', 'Glow & Care Berlin', 'Berlin', 'DE', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S03', 'Glow & Care Madrid', 'Madrid', 'ES', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S04', 'Glow & Care Paris', 'Paris', 'FR', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S05', 'Glow & Care London', 'London', 'GB', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S06', 'Glow & Care Vienna', 'Vienna', 'AT', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S07', 'Glow & Care Milan', 'Milan', 'IT', 'EMEA', 'James Taylor');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S08', 'Glow & Care Tokyo', 'Tokyo', 'JP', 'APAC', 'Yuki Tanaka');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S09', 'Glow & Care Seoul', 'Seoul', 'KR', 'APAC', 'Yuki Tanaka');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S10', 'Glow & Care New York', 'New York', 'US', 'AMER', 'Emma Wilson');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S11', 'Glow & Care Los Angeles', 'Los Angeles', 'US', 'AMER', 'Emma Wilson');
+INSERT INTO SAP_HANA_PROJECTX_HDI_DB_1.DIM_STORE VALUES ('S12', 'Glow & Care Toronto', 'Toronto', 'CA', 'AMER', 'Emma Wilson');

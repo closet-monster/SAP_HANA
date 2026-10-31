@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_DIM_DATE" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_DIM_DATE"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="DIM_DATE">
+    <resourceUri>DIM_DATE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="DATE">
+    <viewAttributes>
+      <viewAttribute id="DATE_ID"/>
+      <viewAttribute id="CAL_DATE"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="QUARTER"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="WEEK"/>
+      <viewAttribute id="DAY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_DATE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="DATE">
+  <attributes>
+    <attribute id="DATE_ID" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="DATE_ID"/>
+      <keyMapping columnObjectName="DATE" columnName="DATE_ID"/>
+    </attribute>
+    <attribute id="CAL_DATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CAL_DATE"/>
+      <keyMapping columnObjectName="DATE" columnName="CAL_DATE"/>
+    </attribute>
+    <attribute id="YEAR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="DATE" columnName="YEAR"/>
+    </attribute>
+    <attribute id="QUARTER" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QUARTER"/>
+      <keyMapping columnObjectName="DATE" columnName="QUARTER"/>
+    </attribute>
+    <attribute id="MONTH" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="DATE" columnName="MONTH"/>
+    </attribute>
+    <attribute id="WEEK" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK"/>
+      <keyMapping columnObjectName="DATE" columnName="WEEK"/>
+    </attribute>
+    <attribute id="DAY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DAY"/>
+      <keyMapping columnObjectName="DATE" columnName="DAY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="DATE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="205"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

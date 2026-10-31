@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_DIM_CUSTOMER" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_DIM_CUSTOMER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="DIM_CUSTOMER">
+    <resourceUri>DIM_CUSTOMER</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="CUSTOMER">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_ID"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="LOCATION"/>
+      <viewAttribute id="COUNTRY"/>
+      <viewAttribute id="SEGMENT"/>
+      <viewAttribute id="LOYALTY_STATUS"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_CUSTOMER"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="CUSTOMER">
+  <attributes>
+    <attribute id="CUSTOMER_ID" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="CUSTOMER_ID"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="CUSTOMER_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_NAME"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="CUSTOMER_NAME"/>
+    </attribute>
+    <attribute id="CUSTOMER_LOCATION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="LOCATION"/>
+    </attribute>
+    <attribute id="CUSTOMER_COUNTRY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="COUNTRY"/>
+    </attribute>
+    <attribute id="CUSTOMER_SEGMENT" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SEGMENT"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="SEGMENT"/>
+    </attribute>
+    <attribute id="CUSTOMER_LOYALTY_STATUS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOYALTY_STATUS"/>
+      <keyMapping columnObjectName="CUSTOMER" columnName="LOYALTY_STATUS"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="CUSTOMER" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="197"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_MULTI_CURRENCY" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_MULTI_CURRENCY"/>
+<localVariables>
+  <variable id="IP_TARGET_CURRENCY" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="3" mandatory="true" defaultValue="USD">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+  <DataSource id="DIM_EXCHANGE_RATE">
+    <resourceUri>DIM_EXCHANGE_RATE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="SALE_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CAL_DATE"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+      <viewAttribute id="CURRENCY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_SALES_CUBE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="SOURCE_CURRENCY"/>
+      <viewAttribute id="TARGET_CURRENCY"/>
+      <viewAttribute id="VALID_DATE"/>
+      <viewAttribute id="RATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_EXCHANGE_RATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SALE_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CAL_DATE"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="SOURCE_CURRENCY"/>
+      <viewAttribute id="TARGET_CURRENCY"/>
+      <viewAttribute id="RATE" aggregationType="sum"/>
+      <viewAttribute id="CURRENCY"/>
+      <viewAttribute id="VALID_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$CURRENCY$SOURCE_CURRENCY"/>
+      <viewAttribute hidden="true" id="JOIN$CAL_DATE$VALID_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="AMOUNT_CONVERTED" datatype="DECIMAL" length="15" expressionLanguage="SQL" scale="2">
+        <formula>&quot;AMOUNT&quot; * &quot;RATE&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALE_ID" source="SALE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_NAME" source="PRODUCT_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CAL_DATE" source="CAL_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CURRENCY$SOURCE_CURRENCY" source="CURRENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CAL_DATE$VALID_DATE" source="CAL_DATE"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_CURRENCY" source="SOURCE_CURRENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TARGET_CURRENCY" source="TARGET_CURRENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_DATE" source="VALID_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CURRENCY$SOURCE_CURRENCY" source="SOURCE_CURRENCY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CAL_DATE$VALID_DATE" source="VALID_DATE"/>
+    </input>
+    <filter>&quot;TARGET_CURRENCY&quot; = '$$IP_TARGET_CURRENCY$$'</filter>
+    <joinAttribute name="JOIN$CURRENCY$SOURCE_CURRENCY"/>
+    <joinAttribute name="JOIN$CAL_DATE$VALID_DATE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="SALE_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALE_ID"/>
+      <keyMapping columnObjectName="Join_1" columnName="SALE_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_NAME"/>
+      <keyMapping columnObjectName="Join_1" columnName="PRODUCT_NAME"/>
+    </attribute>
+    <attribute id="CAL_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CAL_DATE"/>
+      <keyMapping columnObjectName="Join_1" columnName="CAL_DATE"/>
+    </attribute>
+    <attribute id="SOURCE_CURRENCY" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_CURRENCY"/>
+      <keyMapping columnObjectName="Join_1" columnName="SOURCE_CURRENCY"/>
+    </attribute>
+    <attribute id="TARGET_CURRENCY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TARGET_CURRENCY"/>
+      <keyMapping columnObjectName="Join_1" columnName="TARGET_CURRENCY"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="QUANTITY" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Join_1" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="AMOUNT" order="6" aggregationType="sum" measureType="simple" unconverted="false">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Join_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  
+    <measure id="AMOUNT_CONVERTED" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT_CONVERTED"/>
+  
+      <measureMapping columnObjectName="Join_1" columnName="AMOUNT_CONVERTED"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="221" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="115" y="379"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="329" y="379"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="135"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="135"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

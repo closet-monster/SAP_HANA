@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_DIM_PRODUCT" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_DIM_PRODUCT"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="DIM_PRODUCT">
+    <resourceUri>DIM_PRODUCT</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PRODUCT">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID" keepFlag="true"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="SUBCATEGORY"/>
+      <viewAttribute id="COST"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_PRODUCT"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="PRODUCT">
+  <attributes>
+    <attribute id="PRODUCT_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="PRODUCT" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_NAME"/>
+      <keyMapping columnObjectName="PRODUCT" columnName="PRODUCT_NAME"/>
+    </attribute>
+    <attribute id="CATEGORY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <keyMapping columnObjectName="PRODUCT" columnName="CATEGORY"/>
+    </attribute>
+    <attribute id="SUBCATEGORY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUBCATEGORY"/>
+      <keyMapping columnObjectName="PRODUCT" columnName="SUBCATEGORY"/>
+    </attribute>
+    <attribute id="COST" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COST"/>
+      <keyMapping columnObjectName="PRODUCT" columnName="COST"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="PRODUCT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="206"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

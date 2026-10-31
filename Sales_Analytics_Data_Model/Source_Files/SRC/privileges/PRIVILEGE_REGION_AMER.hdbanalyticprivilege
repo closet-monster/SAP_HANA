@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Privilege:analyticPrivilege xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="PRIVILEGE_REGION_AMER" privilegeType="SQL_ANALYTIC_PRIVILEGE" schemaVersion="1.1">
+<descriptions defaultDescription="PRIVILEGE_REGION_AMER"/>
+<securedModels>
+  <modelUri>CV_SALES_CUBE</modelUri>
+</securedModels>
+<restriction>
+  <filter attributeName="STORE_REGION" xsi:type="Privilege:AttributeFilter">
+    <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="AMER" lowValue="undefined" highValue="undefined"/>
+  </filter>
+  <attributeName>STORE_REGION</attributeName>
+  <originInformationModelUri>CV_SALES_CUBE</originInformationModelUri>
+</restriction>
+</Privilege:analyticPrivilege>

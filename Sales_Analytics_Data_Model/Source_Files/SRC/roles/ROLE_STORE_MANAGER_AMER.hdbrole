@@ -1,0 +1,21 @@
+{
+  "role": {
+    "name": "ROLE_STORE_MANAGER_AMER",
+    "schema_privileges": [
+      {
+        "reference": "SAP_HANA_PROJECTX_HDI_DB_1",
+        "privileges": [
+          "SELECT"
+        ]
+      }
+    ],
+    "schema_analytic_privileges": [
+      {
+        "schema_reference": "SAP_HANA_PROJECTX_HDI_DB_1",
+        "privileges": [
+          "PRIVILEGE_REGION_AMER"
+        ]
+      }
+    ]
+  }
+}

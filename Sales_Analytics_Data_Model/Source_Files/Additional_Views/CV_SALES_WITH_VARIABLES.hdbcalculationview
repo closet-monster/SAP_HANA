@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_WITH_VARIABLES" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_WITH_VARIABLES"/>
+<localVariables>
+  <variable id="IP_YEAR" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="INTEGER" mandatory="true" defaultValue="YEAR(CURRENT_DATE) - 1">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="IP_CATEGORY" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="50" mandatory="false" defaultValue="ALL">
+      <valueDomain type="StaticList">
+        <listEntry id="Cosmetics">
+          <descriptions defaultDescription="Cosmetics"/>
+        </listEntry>
+        <listEntry id="Hair Care">
+          <descriptions defaultDescription="Hair Care"/>
+        </listEntry>
+        <listEntry id="Skincare">
+          <descriptions defaultDescription="Skincare"/>
+        </listEntry>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="IP_FROM_DATE" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="DATE" mandatory="false" defaultExpressionLanguage="SQL">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultExpression>ADD_YEARS(CURRENT_DATE, -2)</defaultExpression>
+    </variableProperties>
+  </variable>
+  <variable id="IP_TO_DATE" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="DATE" mandatory="false" defaultExpressionLanguage="SQL">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultExpression>ADD_YEARS(CURRENT_DATE, -1)</defaultExpression>
+    </variableProperties>
+  </variable>
+  <variable id="VAR_YEAR">
+    <descriptions defaultDescription="VAR_YEAR"/>
+    <variableProperties datatype="SMALLINT" scale="0" mandatory="false" inputType="UserProvided">
+      <valueDomain type="AttributeValue">
+    <attribute name="YEAR"/></valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="VAR_CATEGORY">
+    <descriptions defaultDescription="VAR_CATEGORY"/>
+    <variableProperties datatype="NVARCHAR" length="60" defaultValue="">
+      <valueDomain type="AttributeValue">
+    <attribute name="CATEGORY"/></valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="VAR_DATE_RANGE">
+    <descriptions defaultDescription="VAR_DATE_RANGE"/>
+    <variableProperties datatype="DATE" length="10">
+      <valueDomain type="AttributeValue">
+    <attribute name="CAL_DATE"/></valueDomain>
+      <selection type="Range"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="CAL_DATE"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="STORE_REGION"/>
+      <viewAttribute id="AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_SALES_CUBE"/>
+    <filter>&quot;YEAR&quot; = $$IP_YEAR$$
+AND
+&quot;CAL_DATE&quot; BETWEEN '$$IP_FROM_DATE$$' AND '$$IP_TO_DATE$$'
+AND
+('ALL' IN ($$IP_CATEGORY$$) OR &quot;CATEGORY&quot; IN ($$IP_CATEGORY$$))</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="YEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <localVariable>VAR_YEAR</localVariable>
+      <keyMapping columnObjectName="Projection_1" columnName="YEAR"/>
+    </attribute>
+    <attribute id="CAL_DATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CAL_DATE"/>
+      <localVariable>VAR_DATE_RANGE</localVariable>
+      <keyMapping columnObjectName="Projection_1" columnName="CAL_DATE"/>
+    </attribute>
+    <attribute id="CATEGORY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <localVariable>VAR_CATEGORY</localVariable>
+      <keyMapping columnObjectName="Projection_1" columnName="CATEGORY"/>
+    </attribute>
+    <attribute id="STORE_REGION" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_REGION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="AMOUNT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Projection_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_CUBE" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_CUBE"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="FACT_SALES">
+    <resourceUri>FACT_SALES</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="SALES">
+    <viewAttributes>
+      <viewAttribute id="SALE_ID"/>
+      <viewAttribute id="SALE_ITEM_ID"/>
+      <viewAttribute id="SALE_TIMESTAMP"/>
+      <viewAttribute id="DATE_ID"/>
+      <viewAttribute id="CUSTOMER_ID"/>
+      <viewAttribute id="STORE_ID"/>
+      <viewAttribute id="PRODUCT_ID" keepFlag="true"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="PRICE"/>
+      <viewAttribute id="DISCOUNT_PCT"/>
+    
+      <viewAttribute id="CURRENCY"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="NET_SALES" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+        <formula>&quot;QUANTITY&quot;*&quot;PRICE&quot;*(1-&quot;DISCOUNT_PCT&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="FACT_SALES"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="SALES">
+  <attributes>
+    <attribute id="SALE_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALE_ID"/>
+      <keyMapping columnObjectName="SALES" columnName="SALE_ID"/>
+    </attribute>
+    <attribute id="SALE_ITEM_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALE_ITEM_ID"/>
+      <keyMapping columnObjectName="SALES" columnName="SALE_ITEM_ID"/>
+    </attribute>
+    <attribute id="PRICE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRICE"/>
+      <keyMapping columnObjectName="SALES" columnName="PRICE"/>
+    </attribute>
+    <attribute id="CURRENCY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CURRENCY"/>
+      <keyMapping columnObjectName="SALES" columnName="CURRENCY"/>
+    </attribute>
+    <attribute id="CUSTOMER_ID$local">
+      <keyMapping columnObjectName="SALES" columnName="CUSTOMER_ID"/>
+    </attribute>
+    <attribute id="DATE_ID$local">
+      <keyMapping columnObjectName="SALES" columnName="DATE_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID$local">
+      <keyMapping columnObjectName="SALES" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="STORE_ID$local">
+      <keyMapping columnObjectName="SALES" columnName="STORE_ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SALE_TIMESTAMP" order="3" aggregationType="min" measureType="simple">
+      <descriptions defaultDescription="SALE_TIMESTAMP"/>
+      <measureMapping columnObjectName="SALES" columnName="SALE_TIMESTAMP"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUANTITY" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="SALES" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="DISCOUNT_PCT" order="6" aggregationType="avg" measureType="simple">
+      <descriptions defaultDescription="DISCOUNT_PCT"/>
+      <measureMapping columnObjectName="SALES" columnName="DISCOUNT_PCT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="NET_SALES" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="NET_SALES"/>
+      <measureMapping columnObjectName="SALES" columnName="NET_SALES"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="COGS" order="9" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="COGS"/>
+      <formula>&quot;QUANTITY&quot;*&quot;COST&quot;</formula>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="GROSS_MARGIN" order="10" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+      <descriptions defaultDescription="GROSS_MARGIN"/>
+      <formula>&quot;NET_SALES&quot;-&quot;COGS&quot;</formula>
+      <exceptionAggregationMetadata/>
+    </measure></calculatedMeasures>
+  <restrictedMeasures>
+    <measure id="CURRENT_YEAR_SALES" order="11" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="NET_SALES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="CURRENT_YEAR_SALES"/>
+      <restrictionExpression>&quot;YEAR&quot; = YEAR(CURRENT_DATE)</restrictionExpression>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="LAST_YEAR_SALES" order="12" aggregationType="sum" datatype="DECIMAL" length="15" scale="2" baseMeasure="NET_SALES" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="LAST_YEAR_SALES"/>
+      <restrictionExpression>(&quot;YEAR&quot; = YEAR(CURRENT_DATE) - 1)</restrictionExpression>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="CV_DIM_CUSTOMER">
+      <attributes>
+        <attributeRef>CUSTOMER_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CUSTOMER_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" optimizeJoinColumns="false" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="CUSTOMER_NAME" transparentFilter="false"/>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="CV_DIM_DATE">
+      <attributes>
+        <attributeRef>DATE_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>DATE_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" optimizeJoinColumns="false" joinOperator="Equal"/>
+      <associatedAttributeFeatures/>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="CV_DIM_PRODUCT">
+      <attributes>
+        <attributeRef>PRODUCT_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>PRODUCT_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" optimizeJoinColumns="false" joinOperator="Equal"/>
+      <associatedAttributeFeatures/>
+    </logicalJoin>
+    <logicalJoin associatedObjectUri="CV_DIM_STORE">
+      <attributes>
+        <attributeRef>STORE_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>STORE_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="CN_1" joinType="leftOuter" optimizeJoinColumns="false" joinOperator="Equal"/>
+      <associatedAttributeFeatures/>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="100" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="SALES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="265"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="SALES" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="350" y="80"/>
+      <rectangleSize width="191"/>
+    </shape>
+    <shape modelObjectName="CV_DIM_CUSTOMER" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="16" y="16"/>
+      <rectangleSize width="270"/>
+    </shape>
+    <shape modelObjectName="CV_DIM_DATE" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="605" y="16"/>
+      <rectangleSize width="161"/>
+    </shape>
+    <shape modelObjectName="CV_DIM_PRODUCT" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="16" y="226"/>
+      <rectangleSize width="198"/>
+    </shape>
+    <shape modelObjectName="CV_DIM_STORE" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="605" y="207"/>
+      <rectangleSize width="205"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

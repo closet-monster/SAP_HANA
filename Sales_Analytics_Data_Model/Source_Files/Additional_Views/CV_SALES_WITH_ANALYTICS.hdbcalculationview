@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_WITH_ANALYTICS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_WITH_ANALYTICS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_SALES_CUBE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="MONTHLY_SALES" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_SALES" source="AMOUNT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:WindowFunctionView" id="WindowFunction_1">
+    <viewAttributes>
+      <viewAttribute id="YEAR" aggregationType="sum"/>
+      <viewAttribute id="MONTH" aggregationType="sum"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="MONTHLY_SALES" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_SALES" source="MONTHLY_SALES"/></input>
+    <functions>
+      <function name="SUM">
+        <arguments>
+          <argument>&quot;MONTHLY_SALES&quot;</argument>
+        </arguments>
+        <resultColumn datatype="DOUBLE">RUNNING_TOTAL</resultColumn>
+      </function>
+    </functions>
+    <orderAttributes>
+      <orderAttribute direction="ASC">YEAR</orderAttribute>
+      <orderAttribute direction="ASC">MONTH</orderAttribute>
+    </orderAttributes>
+    <partitionAttributes>
+      <partitionAttribute>CATEGORY</partitionAttribute>
+    </partitionAttributes>
+  </calculationView>
+  <calculationView xsi:type="Calculation:WindowFunctionView" id="WindowFunction_2">
+    <viewAttributes>
+      <viewAttribute id="YEAR" aggregationType="sum"/>
+      <viewAttribute id="MONTH" aggregationType="sum"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="MONTHLY_SALES" aggregationType="sum"/>
+      <viewAttribute id="RUNNING_TOTAL" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="WindowFunction_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_SALES" source="MONTHLY_SALES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RUNNING_TOTAL" source="RUNNING_TOTAL"/></input>
+    <functions>
+      <function name="RANK">
+        <arguments/>
+        <resultColumn datatype="DOUBLE">SALES_RANK</resultColumn>
+      </function>
+    </functions>
+    <orderAttributes>
+      <orderAttribute direction="DESC">MONTHLY_SALES</orderAttribute>
+    </orderAttributes>
+    <partitionAttributes>
+      <partitionAttribute>YEAR</partitionAttribute>
+    </partitionAttributes>
+  </calculationView>
+  <calculationView xsi:type="Calculation:WindowFunctionView" id="WindowFunction_3">
+    <viewAttributes>
+      <viewAttribute id="YEAR" aggregationType="sum"/>
+      <viewAttribute id="MONTH" aggregationType="sum"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="MONTHLY_SALES" aggregationType="sum"/>
+      <viewAttribute id="RUNNING_TOTAL" aggregationType="sum"/>
+      <viewAttribute id="SALES_RANK" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="WindowFunction_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_SALES" source="MONTHLY_SALES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RUNNING_TOTAL" source="RUNNING_TOTAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_RANK" source="SALES_RANK"/></input>
+    <functions>
+      <function name="LAG">
+        <arguments>
+          <argument>&quot;MONTHLY_SALES&quot;</argument>
+          <argument>1</argument>
+        </arguments>
+        <resultColumn datatype="DOUBLE">PREVIOUS_MONTH_SALES</resultColumn>
+      </function>
+    </functions>
+    <orderAttributes>
+      <orderAttribute direction="ASC">YEAR</orderAttribute>
+      <orderAttribute direction="ASC">MONTH</orderAttribute>
+    </orderAttributes>
+    <partitionAttributes>
+      <partitionAttribute>CATEGORY</partitionAttribute>
+    </partitionAttributes>
+  </calculationView>
+  <calculationView xsi:type="Calculation:WindowFunctionView" id="WindowFunction_4">
+    <viewAttributes>
+      <viewAttribute id="MONTHLY_SALES" aggregationType="sum"/>
+      <viewAttribute id="YEAR" aggregationType="sum"/>
+      <viewAttribute id="MONTH" aggregationType="sum"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="RUNNING_TOTAL" aggregationType="sum"/>
+      <viewAttribute id="SALES_RANK" aggregationType="sum"/>
+      <viewAttribute id="PREVIOUS_MONTH_SALES" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="WindowFunction_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_SALES" source="MONTHLY_SALES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RUNNING_TOTAL" source="RUNNING_TOTAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_RANK" source="SALES_RANK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PREVIOUS_MONTH_SALES" source="PREVIOUS_MONTH_SALES"/></input>
+    <functions>
+      <function name="AVG">
+        <arguments>
+          <argument>&quot;MONTHLY_SALES&quot;</argument>
+        </arguments>
+        <frame type="ROWS">
+          <start type="PRECEDING">2</start>
+          <end type="CURRENT_ROW"/>
+        </frame>
+        <resultColumn datatype="DOUBLE">MOVING_AVG_3M</resultColumn>
+      </function>
+    </functions>
+    <orderAttributes>
+      <orderAttribute direction="ASC">YEAR</orderAttribute>
+      <orderAttribute direction="ASC">MONTH</orderAttribute>
+    </orderAttributes>
+    <partitionAttributes>
+      <partitionAttribute>CATEGORY</partitionAttribute>
+    </partitionAttributes>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="MONTHLY_SALES"/>
+      <viewAttribute id="RUNNING_TOTAL"/>
+      <viewAttribute id="SALES_RANK"/>
+      <viewAttribute id="MOVING_AVG_3M"/>
+      <viewAttribute id="PREVIOUS_MONTH_SALES"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="MOM_CHANGE" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+        <formula>&quot;MONTHLY_SALES&quot; - &quot;PREVIOUS_MONTH_SALES&quot;</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MOM_CHANGE_PCT" datatype="DECIMAL" length="15" scale="2" expressionLanguage="SQL">
+        <formula>CASE
+WHEN &quot;PREVIOUS_MONTH_SALES&quot; = 0 OR &quot;PREVIOUS_MONTH_SALES&quot; IS NULL
+THEN 0
+ELSE ((&quot;MONTHLY_SALES&quot; - &quot;PREVIOUS_MONTH_SALES&quot;) / &quot;PREVIOUS_MONTH_SALES&quot;) * 100
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="WindowFunction_4"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_2">
+  <attributes>
+    <attribute id="YEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="Projection_2" columnName="YEAR"/>
+    </attribute>
+    <attribute id="MONTH" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="Projection_2" columnName="MONTH"/>
+    </attribute>
+    <attribute id="CATEGORY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <keyMapping columnObjectName="Projection_2" columnName="CATEGORY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="MONTHLY_SALES" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Projection_2" columnName="MONTHLY_SALES"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="RUNNING_TOTAL" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="RUNNING_TOTAL"/>
+      <measureMapping columnObjectName="Projection_2" columnName="RUNNING_TOTAL"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="SALES_RANK" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SALES_RANK"/>
+      <measureMapping columnObjectName="Projection_2" columnName="SALES_RANK"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MOVING_AVG_3M" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MOVING_AVG_3M"/>
+      <measureMapping columnObjectName="Projection_2" columnName="MOVING_AVG_3M"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PREVIOUS_MONTH_SALES" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PREVIOUS_MONTH_SALES"/>
+      <measureMapping columnObjectName="Projection_2" columnName="PREVIOUS_MONTH_SALES"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MOM_CHANGE" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MOM_CHANGE"/>
+      <measureMapping columnObjectName="Projection_2" columnName="MOM_CHANGE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MOM_CHANGE_PCT" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MOM_CHANGE_PCT"/>
+      <measureMapping columnObjectName="Projection_2" columnName="MOM_CHANGE_PCT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="494"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="414"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="WindowFunction_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-160" y="421"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="WindowFunction_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-157" y="309"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="WindowFunction_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-160" y="198"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="WindowFunction_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-160" y="79"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="198"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_GENERAL" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_GENERAL"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="STORE_REGION"/>
+      <viewAttribute id="STORE_COUNTRY"/>
+      <viewAttribute id="STORE_LOCATION"/>
+      <viewAttribute id="STORE_NAME"/>
+      <viewAttribute id="AMOUNT"/>
+      <viewAttribute id="CURRENCY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_SALES_CUBE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="YEAR" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="YEAR"/>
+    </attribute>
+    <attribute id="MONTH" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MONTH"/>
+    </attribute>
+    <attribute id="STORE_REGION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_REGION"/>
+    </attribute>
+    <attribute id="STORE_COUNTRY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_COUNTRY"/>
+    </attribute>
+    <attribute id="STORE_LOCATION" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_LOCATION"/>
+    </attribute>
+    <attribute id="STORE_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STORE_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_NAME"/>
+    </attribute>
+    <attribute id="CURRENCY" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CURRENCY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CURRENCY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SALES_AMOUNT" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Projection_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="191"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

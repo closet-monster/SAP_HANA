@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_TOP_PRODUCTS_RANKED" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_TOP_PRODUCTS_RANKED"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="FACT_SALES">
+    <resourceUri>FACT_SALES</resourceUri>
+  </DataSource>
+  <DataSource id="DIM_PRODUCT">
+    <resourceUri>DIM_PRODUCT</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="FACT_SALES"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_PRODUCT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_NAME" source="PRODUCT_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="TOTAL_SALES" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QUANTITY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_SALES" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QUANTITY" source="QUANTITY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="TOTAL_SALES" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QUANTITY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1"/>
+    <rankingFilter type="RANK" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <order byViewAttributeName="TOTAL_SALES" direction="DESC"/>
+      <rankThreshold>
+        <value>10</value>
+      </rankThreshold>
+      <rankViewAttributeName>RANK_NUMBER</rankViewAttributeName>
+    </rankingFilter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Rank_1">
+  <attributes>
+    <attribute id="PRODUCT_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Rank_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_NAME"/>
+      <keyMapping columnObjectName="Rank_1" columnName="PRODUCT_NAME"/>
+    </attribute>
+    <attribute id="CATEGORY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <keyMapping columnObjectName="Rank_1" columnName="CATEGORY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TOTAL_SALES" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Rank_1" columnName="TOTAL_SALES"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOTAL_QUANTITY" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Rank_1" columnName="TOTAL_QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="RANK_NUMBER" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="RANK_NUMBER"/>
+      <measureMapping columnObjectName="Rank_1" columnName="RANK_NUMBER"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="240" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="131" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="321" y="521"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="240" y="361"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="100"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="240" y="182"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="240" y="282"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

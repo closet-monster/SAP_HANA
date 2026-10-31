@@ -1,0 +1,17 @@
+{
+  "ROLE_STORE_MANAGER_EMEA": {
+    "SAP_HANA_PROJECTX_HDI_DB_1": {
+      "schema": "SAP_HANA_PROJECTX_HDI_DB_1"
+    }
+  },
+  "ROLE_STORE_MANAGER_APAC": {
+    "SAP_HANA_PROJECTX_HDI_DB_1": {
+      "schema": "SAP_HANA_PROJECTX_HDI_DB_1"
+    }
+  },
+  "ROLE_STORE_MANAGER_AMER": {
+    "SAP_HANA_PROJECTX_HDI_DB_1": {
+      "schema": "SAP_HANA_PROJECTX_HDI_DB_1"
+    }
+  }
+}

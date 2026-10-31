@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_WITH_CALCULATIONS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_WITH_CALCULATIONS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_NAME"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="PRICE"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="AMOUNT"/>
+      <viewAttribute id="COST"/>
+      <viewAttribute id="CAL_DATE"/>
+    
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="QUARTER"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PROFIT_MARGIN" datatype="DECIMAL" length="5" scale="2" expressionLanguage="SQL">
+        <formula>CASE
+WHEN &quot;PRICE&quot; = 0 THEN 0
+ELSE ROUND(((&quot;PRICE&quot; - &quot;COST&quot;) / &quot;PRICE&quot;) * 100, 2)
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="DAYS_SINCE_SALE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>DAYS_BETWEEN(&quot;CAL_DATE&quot;, CURRENT_DATE)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PRODUCT_CODE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>LEFT(&quot;CATEGORY&quot;, 3) || '-' || LPAD(&quot;PRODUCT_ID&quot;, 6, '0')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="CV_SALES_CUBE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="PRODUCT_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PRODUCT_NAME"/>
+    </attribute>
+    <attribute id="CATEGORY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CATEGORY"/>
+    </attribute>
+    <attribute id="CAL_DATE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CAL_DATE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CAL_DATE"/>
+    </attribute>
+    <attribute id="CUSTOMER_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CUSTOMER_NAME"/>
+    </attribute>
+    <attribute id="DAYS_SINCE_SALE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DAYS_SINCE_SALE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="DAYS_SINCE_SALE"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_CODE" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PRODUCT_CODE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="CUSTOMER_SEGMENT" order="16" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="20">
+        <formula>CASE
+WHEN &quot;TOTAL_PURCHASES&quot; &gt;= 5 THEN 'Platinum'
+WHEN &quot;TOTAL_PURCHASES&quot; &gt;= 3 THEN 'Gold'
+ELSE 'Standard'
+END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+    <calculatedAttribute id="AVERAGE_SALE_VALUE" order="17" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="DECIMAL" expressionLanguage="SQL" length="5" scale="2">
+        <formula>CASE
+WHEN &quot;TOTAL_PURCHASES&quot; = 0 OR &quot;TOTAL_PURCHASES&quot; IS NULL THEN 0
+ELSE &quot;TOTAL_AMOUNT&quot; / &quot;TOTAL_PURCHASES&quot;
+END</formula>
+      </keyCalculation>
+    </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="PRICE" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PRICE"/>
+      <measureMapping columnObjectName="Projection_1" columnName="PRICE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOTAL_PURCHASES" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOTAL_AMOUNT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Projection_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="COST" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COST"/>
+      <measureMapping columnObjectName="Projection_1" columnName="COST"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PROFIT_MARGIN" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PROFIT_MARGIN"/>
+      <measureMapping columnObjectName="Projection_1" columnName="PROFIT_MARGIN"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="YEAR" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="YEAR"/>
+      <measureMapping columnObjectName="Projection_1" columnName="YEAR"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUARTER" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUARTER"/>
+      <measureMapping columnObjectName="Projection_1" columnName="QUARTER"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MONTH" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MONTH"/>
+      <measureMapping columnObjectName="Projection_1" columnName="MONTH"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="218"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

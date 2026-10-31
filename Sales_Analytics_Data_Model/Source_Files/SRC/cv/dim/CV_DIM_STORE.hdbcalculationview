@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_DIM_STORE" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_DIM_STORE"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="DIM_STORE">
+    <resourceUri>DIM_STORE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="STORE">
+    <viewAttributes>
+      <viewAttribute id="STORE_ID"/>
+      <viewAttribute id="STORE_NAME"/>
+      <viewAttribute id="LOCATION"/>
+      <viewAttribute id="COUNTRY"/>
+      <viewAttribute id="REGION"/>
+      <viewAttribute id="MANAGER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="DIM_STORE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="STORE">
+  <attributes>
+    <attribute id="STORE_ID" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="STORE_ID"/>
+      <keyMapping columnObjectName="STORE" columnName="STORE_ID"/>
+    </attribute>
+    <attribute id="STORE_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STORE_NAME"/>
+      <keyMapping columnObjectName="STORE" columnName="STORE_NAME"/>
+    </attribute>
+    <attribute id="STORE_LOCATION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION"/>
+      <keyMapping columnObjectName="STORE" columnName="LOCATION"/>
+    </attribute>
+    <attribute id="STORE_COUNTRY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY"/>
+      <keyMapping columnObjectName="STORE" columnName="COUNTRY"/>
+    </attribute>
+    <attribute id="STORE_REGION" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="STORE" columnName="REGION"/>
+    </attribute>
+    <attribute id="STORE_MANAGER" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MANAGER"/>
+      <keyMapping columnObjectName="STORE" columnName="MANAGER"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="STORE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

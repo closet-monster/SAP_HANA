@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_PARAMETERIZED" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_SALES_PARAMETERIZED"/>
+<localVariables>
+  <variable id="IP_DATE_FROM" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="DATE" mandatory="true" defaultExpressionLanguage="SQL">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultExpression>ADD_YEARS(CURRENT_DATE, -2)</defaultExpression>
+    </variableProperties>
+  </variable>
+  <variable id="IP_DATE_TO" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="DATE" mandatory="true" defaultExpressionLanguage="SQL">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+      <defaultExpression>ADD_YEARS(CURRENT_DATE, -1)</defaultExpression>
+    </variableProperties>
+  </variable>
+  <variable id="IP_CATEGORIES" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="50" mandatory="false" defaultValue="ALL">
+      <valueDomain type="StaticList">
+        <listEntry id="Cosmetics">
+          <descriptions defaultDescription="Cosmetics"/>
+        </listEntry>
+        <listEntry id="Skincare">
+          <descriptions defaultDescription="Skincare"/>
+        </listEntry>
+        <listEntry id="Hair Care">
+          <descriptions defaultDescription="Hair Care"/>
+        </listEntry>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+
+  <variable id="IP_MIN_AMOUNT" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="DECIMAL" length="10" scale="2" mandatory="false" defaultValue="0">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable></localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_SALES_CUBE">
+    <resourceUri>CV_SALES_CUBE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CAL_DATE"/>
+      <viewAttribute id="CATEGORY"/>
+      <viewAttribute id="STORE_REGION"/>
+      <viewAttribute id="AMOUNT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_SALES_CUBE"/>
+    <filter>&quot;CAL_DATE&quot; BETWEEN '$$IP_DATE_FROM$$' AND '$$IP_DATE_TO$$'
+AND
+('ALL' IN ($$IP_CATEGORIES$$) OR &quot;CATEGORY&quot; IN ($$IP_CATEGORIES$$))
+AND
+&quot;AMOUNT&quot; &gt;= $$IP_MIN_AMOUNT$$</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="CAL_DATE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CAL_DATE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CAL_DATE"/>
+    </attribute>
+    <attribute id="CATEGORY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATEGORY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CATEGORY"/>
+    </attribute>
+    <attribute id="STORE_REGION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STORE_REGION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="AMOUNT" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AMOUNT"/>
+      <measureMapping columnObjectName="Projection_1" columnName="AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="208"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
